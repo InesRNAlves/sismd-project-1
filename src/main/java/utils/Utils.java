@@ -17,9 +17,8 @@ import java.util.stream.Collectors;
 public class Utils {
 
     public static void printMemoryUsage(long before) {
-        long after = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // fui eu que adicionei
-        System.out.println("Memory used: " + (after - before) / (1024 * 1024) + " MB"); // fui eu que adicionei
-        //System.out.printf("Memory used: %.2f MB%n", (after - before) / (1024.0 * 1024.0));
+        long after = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+        System.out.println("Memory used: " + (after - before) / (1024 * 1024) + " MB");
     }
 
     public static void printTopNwordsInHashMap(int top_n, HashMap<String, Integer> counts) {
@@ -35,11 +34,11 @@ public class Utils {
     }
 
     public static void printNrOfEntriesInHashMap(HashMap<String, Integer> wordCounts) {
-        System.out.println("Number of distinct words: " + wordCounts.size()); // fui eu que adicionei
+        System.out.println("Number of distinct words: " + wordCounts.size());
     }
 
     public static void printNrOfEntriesInConcurrentHashMap(ConcurrentHashMap<String, Integer> wordCounts) {
-        System.out.println("Number of distinct words: " + wordCounts.size()); // fui eu que adicionei
+        System.out.println("Number of distinct words: " + wordCounts.size());
     }
 
     public static void printElapseTime(long start) {
