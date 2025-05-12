@@ -18,7 +18,8 @@ import static utils.Utils.printMemoryUsage;
 import static utils.Utils.printNrOfEntriesInConcurrentHashMap;
 import static utils.Utils.getListOfPages;
 
-/*
+
+/**
  * This class uses a simple thread approach to process pages concurrently.
  * It counts the occurrences of words in the text of each page and stores the results in a ConcurrentHashMap.
  * The main method initializes the processing and prints the results.
@@ -27,6 +28,7 @@ public class SimpleThread {
     static final int maxPages = 100000;
     //static final String fileName= "src/main/resources/enwiki.xml";
     static final String fileName= "src/main/resources/enwiki3.xml";
+    //static final String fileName= "enwiki3.xml"; // For running the benchmark script
     static final int NUM_THREADS = Runtime.getRuntime().availableProcessors();
     static final int TOP_N = 3;
 
@@ -41,9 +43,8 @@ public class SimpleThread {
         List<Page>  pages = getListOfPages(pagesIterable);
         int batchSize = (int) Math.ceil((double) pages.size() / NUM_THREADS);
 
-        // CountDownLatch to wait for all threads to finish without using ExecutorService
-        // or having to loop through the threads to join them
-        // todo verificar esta justificação
+        // CountDownLatch to wait for all threads to finish without
+        // having to loop through the threads to join them
         CountDownLatch latch = new CountDownLatch(NUM_THREADS);
         List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < NUM_THREADS; i++) {
@@ -70,11 +71,19 @@ public class SimpleThread {
         printMemoryUsage(before);
         printNrOfEntriesInConcurrentHashMap(counts);
 
+        long elapsed = System.currentTimeMillis() - start;
+        long memoryUsedMB = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024);
+
+        // CSV output
+        System.out.println("BATCH_SIZE,TIME_MS,MEMORY_MB,PAGES");
+        System.out.printf("%d,%d\n", elapsed, memoryUsedMB);
+
     }
 
-    /*
+    /**
      * Process a list of pages and count the occurrences of words in the text of each page.
      * The results are stored in a ConcurrentHashMap.
+     * @param pages the list of pages to process
      */
     private static void processPages(List<Page> pages) {
         for (Page page : pages) {

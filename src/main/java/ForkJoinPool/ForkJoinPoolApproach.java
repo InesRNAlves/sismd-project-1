@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -22,27 +21,21 @@ import static utils.Utils.printMemoryUsage;
 import static utils.Utils.printNrOfEntriesInConcurrentHashMap;
 import static utils.Utils.printTopNwordsInConcurrentHashMap;
 
-// todo Adicionar threshold e testar com e sem
-// todo Mudar para concurrenthashmap
 
-/*
+/**
  * This class uses ForkJoinPool to process pages concurrently.
  * It counts the occurrences of words in the text of each page and stores the results in a ConcurrentHashMap.
  * The main method initializes the processing and prints the results.
  */
 public class ForkJoinPoolApproach {
 
-    //static final int maxPages = 100000;
-    static int maxPages = 100000;
-
+    static final int maxPages = 100000;
     //static final String fileName = "src/main/resources/enwiki.xml";
-    //static final String fileName= "enwiki.xml"; // For running the benchmark script
-    //static final String fileName= "enwiki3.xml";
     static final String fileName = "src/main/resources/enwiki3.xml";
-    static final int TOP_N = 3; // fui eu que adicionei
-    //static final int THRESHOLD = 1500; // fui eu que adicionei
-    static int THRESHOLD = 300; // default value for benchmark script
-    static final int NUM_THREADS = Runtime.getRuntime().availableProcessors(); // todo testar com 11 threads
+    //static final String fileName= "enwiki2.xml"; // For running the benchmark script
+    //static final String fileName= "enwiki3.xml";// For running the benchmark script
+    static final int TOP_N = 3;
+    static int THRESHOLD = 300;
 
     private static final ConcurrentHashMap<String, Integer> counts =
             new ConcurrentHashMap<>();
@@ -50,16 +43,8 @@ public class ForkJoinPoolApproach {
 
     public static void main(String[] args) throws Exception {
 
-        if (args.length > 0) {
-            THRESHOLD = Integer.parseInt(args[0]);
-        }
-
-        /*if (args.length > 0) {
-            maxPages = Integer.parseInt(args[0]); // The first argument is maxPages
-        }*/
-
         long start = System.currentTimeMillis();
-        long memoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // fui eu que adicionei
+        long memoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
         Iterable<Page> pagesIterable = new Pages(maxPages, fileName);
         List<Page>  pages = getListOfPages(pagesIterable);
@@ -74,7 +59,7 @@ public class ForkJoinPoolApproach {
         System.out.println("Processed pages: " + pageCount);
         printElapseTime(start);
         printTopNwordsInConcurrentHashMap(TOP_N, counts);
-        printMemoryUsage(memoryBefore); // fui eu que adicionei
+        printMemoryUsage(memoryBefore);
         printNrOfEntriesInConcurrentHashMap(counts);
 
         long elapsed = System.currentTimeMillis() - start;
@@ -83,7 +68,7 @@ public class ForkJoinPoolApproach {
 
     }
 
-    /*
+    /**
      * This class extends a RecursiveTask to process a list of pages.
      * The task is divided into smaller subtasks if the size exceeds a threshold.
      */
@@ -99,7 +84,6 @@ public class ForkJoinPoolApproach {
 
         @Override
         protected Integer compute() {
-            //int count = 0;
             // Sequential processing if the size is below the threshold
             if (end - start <= THRESHOLD) {
                 for (int i = start; i < end; i++) {
@@ -118,7 +102,6 @@ public class ForkJoinPoolApproach {
                     );
 
                     pageCount.incrementAndGet();
-                    //count++;
                 }
             } else {
                 // Divide the task into subtasks
@@ -129,16 +112,11 @@ public class ForkJoinPoolApproach {
                 tasks.add(left);
                 tasks.add(right);
                 left.fork();
-                System.out.println("Left task forked");
                 right.fork();
-                System.out.println("Right task forked");
 
                 for (PageProcessor task : tasks) {
-                    //count += task.join();
                     task.join();
                 }
-
-                //invokeAll(left, right); // fork + join automatically
             }
             return 1;
         }

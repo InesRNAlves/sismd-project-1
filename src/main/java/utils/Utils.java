@@ -9,6 +9,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/**
+ * Utility class for various helper methods.
+ * This class contains static methods for printing memory usage, top N words,
+ * number of entries in maps, elapsed time, and validating words.
+ */
 public class Utils {
 
     public static void printMemoryUsage(long before) {

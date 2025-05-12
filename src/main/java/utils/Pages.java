@@ -6,6 +6,10 @@ import javax.xml.stream.events.XMLEvent;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 
+/**
+ * This class reads a specified number of pages from an XML file.
+ * It implements the Iterable interface to allow iteration over the pages.
+ */
 public class Pages implements Iterable<Page> {
 
     private final int maxPages;

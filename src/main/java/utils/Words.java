@@ -3,6 +3,10 @@ package utils;
 import java.text.BreakIterator;
 import java.util.Iterator;
 
+/**
+ * This class is used to iterate over words in a given text.
+ * It implements the Iterable interface to allow iteration over the words.
+ */
 public class Words implements Iterable<String> {
 
   private final String text;

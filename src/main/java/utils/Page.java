@@ -1,5 +1,9 @@
 package utils;
 
+/**
+ * This class represents a page with a title and text.
+ * It provides methods to get the title and text of the page.
+ */
 public class Page {
   private String title;
   private String text;
