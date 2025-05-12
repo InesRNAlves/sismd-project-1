@@ -16,6 +16,7 @@ public class WordCount {
 
     static final int maxPages = 100000;
     static final String fileName = "src/main/resources/enwiki.xml";
+    //static final String fileName = "src/main/resources/enwiki3.xml";
     static final int TOP_N = 3; // fui eu que adicionei
 
     private static final HashMap<String, Integer> counts =
@@ -43,6 +44,7 @@ public class WordCount {
             ++processedPages;
         }
 
+        // Print Metrics
         System.out.println("Processed pages: " + processedPages);
         printElapseTime(start);
         printTopNwordsInHashMap(TOP_N, counts);

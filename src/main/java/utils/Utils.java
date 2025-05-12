@@ -1,8 +1,10 @@
 package utils;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -52,6 +54,23 @@ public class Utils {
         }
 
         return true;
+    }
+
+    public static List<Page> getListOfPages(Iterable<Page> pagesIterable) {
+        List<Page> pages = new ArrayList<>();
+        for (Page page : pagesIterable) {
+            if (page == null) break;
+            pages.add(page);
+        }
+        return pages;
+    }
+
+    public static List<List<Page>> partitionList(List<Page> list, int batchSize) {
+        List<List<Page>> partitions = new ArrayList<>();
+        for (int i = 0; i < list.size(); i += batchSize) {
+            partitions.add(list.subList(i, Math.min(i + batchSize, list.size())));
+        }
+        return partitions;
     }
 
 }
